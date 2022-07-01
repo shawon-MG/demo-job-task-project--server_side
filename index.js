@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const cors = require('cors');
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(express.json());
 app.use(
@@ -39,6 +39,27 @@ async function run() {
             const query = {};
             const cursor = toDoListCollection.find(query);
             const result = await cursor.toArray();
+
+            res.send(result);
+        });
+
+        app.get('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await toDoListCollection.findOne(query);
+
+            res.send(result);
+        });
+
+        app.put('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedTask = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: updatedTask
+            };
+            const result = await toDoListCollection.updateOne(filter, updatedDoc, options);
 
             res.send(result);
         });
