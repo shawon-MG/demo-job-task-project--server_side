@@ -75,14 +75,23 @@ async function run() {
             res.send(result);
         });
 
-        app.get('/task/done/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+        // app.get('/task/done/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
 
-            const doneTask = await toDoListCollection.findOne(query)
-            const isDone = doneTask?.role === 'done';
+        //     const doneTask = await toDoListCollection.findOne(query)
+        //     const isDone = doneTask?.role === 'done';
 
-            res.send({ done: isDone });
+        //     res.send({ done: isDone });
+        // });
+
+        app.get('/complete-task', async (req, res) => {
+            const role = req.query.role;
+            const query = { role: role };
+            const cursor = toDoListCollection.find(query);
+            const tasks = await cursor.toArray();
+            res.send(tasks);
+
         });
 
 
