@@ -28,6 +28,9 @@ async function run() {
         await client.connect();
         const toDoListCollection = client.db('demo-job-task--project').collection('to-do-lists');
 
+        const user = { task: "Task Four is created" };
+        const result = await toDoListCollection.insertOne(user);
+
 
     }
     finally {
